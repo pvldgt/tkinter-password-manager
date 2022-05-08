@@ -3,6 +3,18 @@ from tkinter import *
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+def add():
+    """This function writes the website name, the username and
+    the password into the 'all_passwords.txt' file."""
+    website_entry = website.get()
+    username_entry = username.get()
+    password_entry = password.get()
+    full_line = f"{website_entry} | {username_entry} | {password_entry}\n"
+    with open("all_passwords.txt", "a") as file:
+        file.write(full_line)
+        # once the password is added, the website and password entries get cleared
+        website.delete(0, END)
+        password.delete(0, END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 # create the window
@@ -10,7 +22,7 @@ window = Tk()
 # add the program title
 window.title("Password Manager")
 # set the padding
-window.config(padx=20, pady=20)
+window.config(padx=40, pady=40)
 
 # create the canvas for the logo
 canvas = Canvas(width=200, height=200)
@@ -33,18 +45,19 @@ password_label = Label(text="Password:")
 password_label.grid(column=0, row=3)
 
 # website entry
-website_entry = StringVar()
-website = Entry(textvariable=website_entry, width=35)
+website = Entry(width=35)
 website.grid(column=1, row=1, columnspan=2)
+# make the first entry box active (focused)
+website.focus()
 
 # email or username entry
-username_entry = StringVar()
-username = Entry(textvariable=username_entry, width=35)
+username = Entry(width=35)
 username.grid(column=1, row=2, columnspan=2)
+# the entry box will have the most commonly used user email pre-entered
+username.insert(0, "test@gmail.com")
 
 # password entry
-password_entry = StringVar()
-password = Entry(textvariable=username_entry, width=21)
+password = Entry(width=21)
 password.grid(column=1, row=3)
 
 # generate password button
@@ -52,7 +65,7 @@ generate_password_button = Button(text="Generate Password")
 generate_password_button.grid(column=2, row=3)
 
 # add button
-add_button = Button(text="Add", width=36)
+add_button = Button(text="Add", width=36, command=add)
 add_button.grid(column=1, row=4, columnspan=2)
 
 
