@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
@@ -10,11 +11,18 @@ def add():
     username_entry = username.get()
     password_entry = password.get()
     full_line = f"{website_entry} | {username_entry} | {password_entry}\n"
-    with open("all_passwords.txt", "a") as file:
-        file.write(full_line)
-        # once the password is added, the website and password entries get cleared
-        website.delete(0, END)
-        password.delete(0, END)
+
+    is_ok = messagebox.askokcancel(title=website_entry,
+                                   message=f"Below ↓↓↓ are the details that you have entered for "
+                                           f"{website_entry}\n"
+                                           f"Username or email: {username_entry}\n"
+                                           f"Password: {password_entry}")
+    if is_ok:
+        with open("all_passwords.txt", "a") as file:
+            file.write(full_line)
+            # once the password is added, the website and password entries get cleared
+            website.delete(0, END)
+            password.delete(0, END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 # create the window
