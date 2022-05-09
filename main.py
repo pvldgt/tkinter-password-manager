@@ -1,7 +1,33 @@
 from tkinter import *
 from tkinter import messagebox
+from random import randint, choice, shuffle
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
+def generate_password():
+    # create lists of letters, numbers and symbols
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+               'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+               'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+
+    # create lists of random letters, symbols and numbers
+    letters_list = [choice(letters) for char in range(randint(8, 10))]
+    symbols_list = [choice(symbols) for symbol in range(randint(2, 4))]
+    number_list = [choice(numbers) for number in range(randint(2, 4))]
+
+    # combine these random elements into one password list and randomly shuffle the elements
+    password_list = letters_list + symbols_list + number_list
+    shuffle(password_list)
+
+    # turn the randomly generated list of elements into a password string
+    ready_password = "".join([char for char in password_list])
+
+    # first remove any pre-entered password, then insert the generated password into the password entry box
+    password.delete(0, END)
+    password.insert(0, ready_password)
+
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def add():
@@ -24,8 +50,10 @@ def add():
                 # once the password is added, the website and password entries get cleared
                 website.delete(0, END)
                 password.delete(0, END)
+                messagebox.showinfo(message="Password has been saved")
     else:
         messagebox.showinfo(message="Please don't leave any fields empty")
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 # create the window
@@ -72,12 +100,11 @@ password = Entry(width=21)
 password.grid(column=1, row=3)
 
 # generate password button
-generate_password_button = Button(text="Generate Password")
+generate_password_button = Button(text="Generate Password", command=generate_password)
 generate_password_button.grid(column=2, row=3)
 
 # add button
 add_button = Button(text="Add", width=36, command=add)
 add_button.grid(column=1, row=4, columnspan=2)
-
 
 window.mainloop()
