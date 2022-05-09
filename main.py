@@ -12,17 +12,20 @@ def add():
     password_entry = password.get()
     full_line = f"{website_entry} | {username_entry} | {password_entry}\n"
 
-    is_ok = messagebox.askokcancel(title=website_entry,
-                                   message=f"Below ↓↓↓ are the details that you have entered for "
-                                           f"{website_entry}\n"
-                                           f"Username or email: {username_entry}\n"
-                                           f"Password: {password_entry}")
-    if is_ok:
-        with open("all_passwords.txt", "a") as file:
-            file.write(full_line)
-            # once the password is added, the website and password entries get cleared
-            website.delete(0, END)
-            password.delete(0, END)
+    if website_entry != "" and password_entry != "":
+        is_ok = messagebox.askokcancel(title=website_entry,
+                                       message=f"Below ↓↓↓ are the details that you have entered for "
+                                               f"{website_entry}\n"
+                                               f"Username or email: {username_entry}\n"
+                                               f"Password: {password_entry}")
+        if is_ok:
+            with open("all_passwords.txt", "a") as file:
+                file.write(full_line)
+                # once the password is added, the website and password entries get cleared
+                website.delete(0, END)
+                password.delete(0, END)
+    else:
+        messagebox.showinfo(message="Please don't leave any fields empty")
 
 # ---------------------------- UI SETUP ------------------------------- #
 # create the window
