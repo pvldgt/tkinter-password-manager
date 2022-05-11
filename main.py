@@ -54,16 +54,21 @@ def add():
                                                f"Username or email: {username_entry}\n"
                                                f"Password: {password_entry}")
         if is_ok:
-            with open("all_passwords.json", "r") as file:
-                # read old data
-                data = json.load(file)
+            try:
+                with open("all_passwords.json", "r") as file:
+                    # read old data
+                    data = json.load(file)
+            # if the file doesn't exist yet, we'll create it and write the new dictionary to it
+            except FileNotFoundError:
+                with open("all_passwords.json", "w") as file:
+                    json.dump(new_dictionary, file, indent=4)
+            else:
                 # update the old data with new data
                 data.update(new_dictionary)
-
-            with open("all_passwords.json", "w") as file:
                 # save the updated data to the json file
-                json.dump(data, file, indent=4)
-
+                with open("all_passwords.json", "w") as file:
+                    json.dump(data, file, indent=4)
+            finally:
                 # once the password is added, the website and password entries get cleared
                 website.delete(0, END)
                 password.delete(0, END)
