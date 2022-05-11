@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from random import randint, choice, shuffle
 import pyperclip
+import json
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -39,7 +40,12 @@ def add():
     website_entry = website.get()
     username_entry = username.get()
     password_entry = password.get()
-    full_line = f"{website_entry} | {username_entry} | {password_entry}\n"
+    new_dictionary = {
+        website_entry: {
+            "username": username_entry,
+            "password": password_entry
+        }
+    }
 
     if website_entry != "" and password_entry != "":
         is_ok = messagebox.askokcancel(title=website_entry,
@@ -48,8 +54,16 @@ def add():
                                                f"Username or email: {username_entry}\n"
                                                f"Password: {password_entry}")
         if is_ok:
-            with open("all_passwords.txt", "a") as file:
-                file.write(full_line)
+            with open("all_passwords.json", "r") as file:
+                # read old data
+                data = json.load(file)
+                # update the old data with new data
+                data.update(new_dictionary)
+
+            with open("all_passwords.json", "w") as file:
+                # save the updated data to the json file
+                json.dump(data, file, indent=4)
+
                 # once the password is added, the website and password entries get cleared
                 website.delete(0, END)
                 password.delete(0, END)
