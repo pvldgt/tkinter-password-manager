@@ -36,7 +36,7 @@ def generate_password():
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def add():
     """This function writes the website name, the username and
-    the password into the 'all_passwords.txt' file."""
+    the password into the 'all_passwords.json' file."""
     website_entry = website.get()
     username_entry = username.get()
     password_entry = password.get()
@@ -77,6 +77,36 @@ def add():
         messagebox.showinfo(message="Please don't leave any fields empty")
 
 
+# ---------------------------- FIND PASSWORD ------------------------------- #
+
+def find_password():
+    """This function will check if there is an existing entry for this website
+    and will retrieve the data associated with it, if found"""
+    # grab the website entry
+    website_entry = website.get()
+    # read the json file
+    try:
+        with open("all_passwords.json", "r") as file:
+            # read old data
+            data = json.load(file)
+    # if it doesn't exist, notify the user
+    except FileNotFoundError:
+        messagebox.showinfo(message="Nothing to search yet as there are no password saved")
+    # check if the entry exists, if it does, display the details, if not, display an info message
+    else:
+        try:
+            found_username = data[website_entry]["username"]
+            found_password = data[website_entry]["password"]
+        except KeyError:
+            messagebox.showinfo(message="No details for this website exist")
+        else:
+            messagebox.showinfo(message=f"Here are the details for {website_entry}\n"
+                                        f"Username: {found_username}\n"
+                                        f"Password: {found_password}")
+            # copy the password into the clipboard
+            pyperclip.copy(found_password)
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 # create the window
 window = Tk()
@@ -106,8 +136,8 @@ password_label = Label(text="Password:")
 password_label.grid(column=0, row=3)
 
 # website entry
-website = Entry(width=35)
-website.grid(column=1, row=1, columnspan=2)
+website = Entry(width=21)
+website.grid(column=1, row=1)
 # make the first entry box active (focused)
 website.focus()
 
@@ -128,5 +158,9 @@ generate_password_button.grid(column=2, row=3)
 # add button
 add_button = Button(text="Add", width=36, command=add)
 add_button.grid(column=1, row=4, columnspan=2)
+
+# search button
+search_button = Button(text="Search", width=13, command=find_password)
+search_button.grid(column=2, row=1)
 
 window.mainloop()
